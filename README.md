@@ -4,8 +4,16 @@ A TypeScript script that reads PDF files from a directory, generates concise sum
 
 ### Setup
 
-`npm install`
+Run `npm install`
+
+Copy .env_example to .env and add your key for the LLM credentials.
 
 ### Run script
 
-`npx ts-node main.ts`
+Copy pdfs into the ./pdf folder and run `npx ts-node main.ts`
+
+Output will be in summaries.pdf file
+
+### Notes
+
+This script runs with Google's Gemini 1.5 Flash LLM. Thanks to Vercel's flexible AI library, you can easily switch to another provider.

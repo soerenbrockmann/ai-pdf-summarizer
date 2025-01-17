@@ -45,23 +45,33 @@ async function summarizeText(pdfText: string): Promise<string> {
 
 // Function to create a PDF with summaries
 async function createSummaryPDF(
-  summaries: string[],
+  fileSummaries: { fileName: string; summary: string }[],
   outputFilePath: string
 ): Promise<void> {
   const pdfDoc = await PDFDocument.create();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
 
-  summaries.forEach((summary, index) => {
+  fileSummaries.forEach(({ fileName, summary }, index) => {
     const page = pdfDoc.addPage([600, 800]);
     const { width, height } = page.getSize();
     const fontSize = 12;
-    const text = `Summary ${index + 1}:
 
-${summary}`;
+    // Title text with file name
+    const title = `File: ${fileName}`;
 
-    page.drawText(text, {
+    // Draw the file name at the top
+    page.drawText(title, {
       x: 50,
       y: height - 50,
+      size: fontSize + 2,
+      font: timesRomanFont,
+      color: rgb(0, 0, 0),
+    });
+
+    // Draw the summary below the file name
+    page.drawText(summary, {
+      x: 50,
+      y: height - 80,
       size: fontSize,
       font: timesRomanFont,
       color: rgb(0, 0, 0),
@@ -81,17 +91,24 @@ async function main() {
 
   try {
     console.log("Reading PDF files...");
-    const pdfTexts = await readPDFFolder(folderPath);
+    const pdfFiles = fs
+      .readdirSync(folderPath)
+      .filter((file) => path.extname(file).toLowerCase() === ".pdf");
+    const fileSummaries: { fileName: string; summary: string }[] = [];
 
-    console.log("Summarizing PDF contents...");
-    const summaries: string[] = [];
-    for (const text of pdfTexts) {
-      const summary = await summarizeText(text);
-      summaries.push(summary);
+    for (const pdfFile of pdfFiles) {
+      const filePath = path.join(folderPath, pdfFile);
+      const fileBuffer = fs.readFileSync(filePath);
+      const pdfData = await pdfParse(fileBuffer);
+
+      console.log(`Summarizing ${pdfFile}...`);
+      const summary = await summarizeText(pdfData.text);
+
+      fileSummaries.push({ fileName: pdfFile, summary });
     }
 
     console.log("Creating summary PDF...");
-    await createSummaryPDF(summaries, outputFilePath);
+    await createSummaryPDF(fileSummaries, outputFilePath);
 
     console.log(`Summary PDF created successfully at ${outputFilePath}`);
   } catch (error) {
