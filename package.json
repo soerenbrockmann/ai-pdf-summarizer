@@ -1,0 +1,33 @@
+{
+  "name": "ai-pdf-summarizer",
+  "version": "1.0.0",
+  "description": "A TypeScript script that reads PDF files from a directory, generates concise summaries using an LLM, and compiles the results into a single summary PDF. Perfect for automating document reviews or creating quick overviews of large text files.",
+  "homepage": "https://github.com/soerenbrockmann/ai-pdf-summarizer#readme",
+  "bugs": {
+    "url": "https://github.com/soerenbrockmann/ai-pdf-summarizer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soerenbrockmann/ai-pdf-summarizer.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^1.0.17",
+    "ai": "^4.0.39",
+    "dotenv": "^16.4.7",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "@types/pdf-parse": "^1.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}
